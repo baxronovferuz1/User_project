@@ -1,3 +1,4 @@
+from datetime import datetime,timedelta #timedeltani vaqt qoshishda ishlatamiz
 from django.db import models
 from django.contrib.auth.models import AbstractUser,AbstractBaseUser,UserManager
 from django.core.validators import RegexValidator
@@ -33,6 +34,22 @@ class UserConfirmation(models.Model):
     user=models.ForeignKey('users.User',on_delete=models.CASCADE)
     verify_type=models.CharField(max_length=31, choices=TYPE_CHOICES)
     expiration_time=models.DataTimeField(null=True)
+    is_confirmed=models.BooleanField(default=False)
+
+
+    def __str__(self):
+        return str(self.user.__str__())
+
+    
+    def save(self,*args,**kwargs):
+        if not self.pk:
+            if self.verify_type==VIA_EMAIL:
+                self.expiration_time=datetime.now()+timedelta(minutes=EMAIL_EXPIRE)
+
+            else:
+                self.expiration_time=datetime.now()+timedelta(minutes=PHONE_EXPIRE)
+            
+        super(UserConfirmation, self).save(*args,**kwargs)
 
 
 
@@ -82,6 +99,12 @@ class User(AbstractUser):
 
     def create_verify_code(self,verify_type):
         code="".join([str(random.randint(0,100)%10) for _ in range(4)])
+        UserConfirmation.objects.create(
+            user_id=self.id,
+            verify_type=verify_type,
+            code=code
+        )
+        return code 
 
 
     
