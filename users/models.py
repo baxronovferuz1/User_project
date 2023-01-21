@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser,AbstractBaseUser,UserManager
 from django.core.validators import RegexValidator
 import random
+from shared.models import BaseModel
 
 ORDINARY_USER, MANAGER, SUPER_ADMIN = (
     'ordinary_user',
@@ -21,6 +22,8 @@ MALE,FEMALE=(
     "femail"
 )
 
+
+
 PHONE_EXPIRE=2
 EMAIL_EXPIRE=5
 
@@ -33,8 +36,9 @@ class UserConfirmation(models.Model):
     code=models.CharField(max_length=4)
     user=models.ForeignKey('users.User',on_delete=models.CASCADE)
     verify_type=models.CharField(max_length=31, choices=TYPE_CHOICES)
-    expiration_time=models.DataTimeField(null=True)
+    expiration_time=models.DateTimeField(null=True)
     is_confirmed=models.BooleanField(default=False)
+
 
 
     def __str__(self):
@@ -54,11 +58,11 @@ class UserConfirmation(models.Model):
 
 
 
-class User(AbstractUser):
+class User(AbstractUser,BaseModel):
     _validate_phone=RegexValidator(
         regex=r"^9\d{12}$",
         message='Telefon raqamingiz 9 bilan boshlanib va 12 ta raqamdan iborat bolsin',
-    )
+       )
 
 
     USER_ROLES=(
@@ -105,6 +109,9 @@ class User(AbstractUser):
             code=code
         )
         return code 
+
+    
+
 
 
     
