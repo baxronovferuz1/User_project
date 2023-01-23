@@ -58,12 +58,11 @@ class UserConfirmation(models.Model):
 
 
 
-class User(AbstractUser,BaseModel):
+class User(AbstractUser, BaseModel):
     _validate_phone=RegexValidator(
         regex=r"^9\d{12}$",
         message='Telefon raqamingiz 9 bilan boshlanib va 12 ta raqamdan iborat bolsin',
-       )
-
+    )
 
     USER_ROLES=(
         (ORDINARY_USER, ORDINARY_USER),
@@ -87,22 +86,18 @@ class User(AbstractUser,BaseModel):
     email=models.EmailField(null=True,unique=True)
     phone_number=models.CharField(max_length=12,null=True, unique=True,validators=[_validate_phone])
     bio=models.CharField(max_length=200, null=True)
-
     
     object=UserManager()
-
 
     def __str__(self):
         return self.username
 
-    
     @property
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
 
-
     def create_verify_code(self,verify_type):
-        code="".join([str(random.randint(0,100)%10) for _ in range(4)])
+        code="".join(str(random.randint(1000,9999)))
         UserConfirmation.objects.create(
             user_id=self.id,
             verify_type=verify_type,
