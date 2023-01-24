@@ -17,13 +17,19 @@ VIA_EMAIL,VIA_PHONE,VIA_USERNAME=(
     "super_admin"
 )
 
+
 MALE,FEMALE=(
     "male",
     "femail"
 )
 
 
-
+NEW,CODE_VERIFIED,INFORMATION_FILLED,DONE=(
+    "NEW",
+    "CODE_VERIFIED",
+    "INFIRMATION_FILLED",
+    "DONE"
+)
 PHONE_EXPIRE=2
 EMAIL_EXPIRE=5
 
@@ -74,6 +80,14 @@ class User(AbstractUser, BaseModel):
         (VIA_PHONE,VIA_PHONE),
         (VIA_USERNAME,VIA_USERNAME)
     )
+
+    #Qaysi pagedaligini aniqlaydi
+    AUTH_STATUS=(
+        (NEW,NEW),
+        (CODE_VERIFIED,CODE_VERIFIED),
+        (INFORMATION_FILLED,INFORMATION_FILLED)
+
+    )
     SEX_CHOICES=(
         (MALE,MALE),
         (FEMALE,FEMALE)
@@ -82,6 +96,7 @@ class User(AbstractUser, BaseModel):
     
     user_roles=models.CharField(max_length=31,choices=USER_ROLES, default=ORDINARY_USER)
     auht_type=models.CharField(max_length=35, choices=AUTH_TYPE_CHOICES, default=VIA_USERNAME)
+    auht_type=models.CharField(max_length=35, choices=AUTH_STATUS, default=NEW)
     sex=models.CharField(max_length=20, choices= SEX_CHOICES, null=True)
     email=models.EmailField(null=True,unique=True)
     phone_number=models.CharField(max_length=12,null=True, unique=True,validators=[_validate_phone])
