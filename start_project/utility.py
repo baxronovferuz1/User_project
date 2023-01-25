@@ -18,3 +18,6 @@ def check_email_or_phone(email_or_phone):
             'success':False,
             'message':"Kiritgan email yoki raqamingiz noto'g'ri"
         }
+        raise ValidationError(data)
+
+    return email_or_phone
