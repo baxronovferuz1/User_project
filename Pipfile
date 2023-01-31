@@ -8,6 +8,7 @@ django = "*"
 djangorestframework = "*"
 djangorestframework-simplejwt = "*"
 phonenumbers = "*"
+twilio = "*"
 
 [dev-packages]
 

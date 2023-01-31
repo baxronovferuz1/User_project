@@ -3,7 +3,8 @@ from users.models import User,UserConfirmation
 from start_project.utility import check_email_or_phone
 from users.models import VIA_EMAIL,VIA_PHONE
 from rest_framework.exceptions import ValidationError
-from shared.utils import phone_parser
+from shared.utils import phone_parser,send_email,send_phone_notification
+
 
 
 
@@ -37,11 +38,19 @@ class SignUPSerializer(serializers.ModelSerializer):
         if user.auth_type==VIA_EMAIL:
             code=user.create_verify_code(user.auth_type)
             send_email(user.email, code)
+        elif user.auth_type==VIA_PHONE:
+            code=user.create_verify_code(user.auth_type)
+            send_phone_notification(user.phone_number, code)
+
+
+
 
     def validate(self,in_data):
         super(SignUPSerializer,self).validate(in_data)
         data=self.auth_validate(in_data)
         return data
+
+
 
 
     @staticmethod
