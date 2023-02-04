@@ -56,7 +56,7 @@ def send_phone_notification(phone,code):
     client=Client(account_sid,auth_token)
     client.messages.create(
         body=f"Hello! Your verification code is {code}/n",
-        from_="+998931234567"
+        from_="+998931234567",
         to=f"{phone}"
     )
 

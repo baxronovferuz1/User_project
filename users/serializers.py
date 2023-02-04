@@ -91,6 +91,7 @@ class SignUPSerializer(serializers.ModelSerializer):
         value=value.lower()
 
 
+
         if value and User.objects.filter(email=value).exists():
             data={
                 "success":False,
@@ -98,6 +99,8 @@ class SignUPSerializer(serializers.ModelSerializer):
             }
             raise ValidationError(data)
         
+
+
         elif value and User.objects.filter(phone_number=value).exists():
             data={
                 "success":False,
@@ -105,7 +108,16 @@ class SignUPSerializer(serializers.ModelSerializer):
             }
             raise ValidationError(data)
 
+
+
         if check_email_or_phone(value)=="phone": #998931234567 shu ko'rinishda qabul qilinadi
             phone_parser(value )#,self.initial_data.get("country_code"))---agar country code berilgan bo'lsa shu qism ishlatiladi
             return value
             
+    
+
+
+    def to_representation(self, instance):
+        data=super(SignUPSerializer, self).to_representation(instance)
+        data.update(instance.toke())
+        return data

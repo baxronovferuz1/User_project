@@ -4,6 +4,10 @@ from django.contrib.auth.models import AbstractUser,AbstractBaseUser,UserManager
 from django.core.validators import RegexValidator
 import random
 from shared.models import BaseModel
+from rest_framework_simplejwt.tokens import RefreshToken
+
+
+
 
 ORDINARY_USER, MANAGER, SUPER_ADMIN = (
     'ordinary_user',
@@ -83,9 +87,9 @@ class User(AbstractUser, BaseModel):
 
     #Qaysi pagedaligini aniqlaydi
     AUTH_STATUS=(
-        (NEW,NEW),
-        (CODE_VERIFIED,CODE_VERIFIED),
-        (INFORMATION_FILLED,INFORMATION_FILLED)
+        (NEW, NEW),
+        (CODE_VERIFIED, CODE_VERIFIED),
+        (INFORMATION_FILLED, INFORMATION_FILLED)
 
     )
     SEX_CHOICES=(
@@ -121,7 +125,12 @@ class User(AbstractUser, BaseModel):
         return code 
 
     
-
+    def token(self):
+        refresh=RefreshToken.for_user(self)
+        return{
+            "access":str(refresh.access_token),
+            "refresh":str(refresh)
+        }
 
 
     
